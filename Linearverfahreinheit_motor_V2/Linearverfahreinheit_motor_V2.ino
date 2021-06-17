@@ -1,5 +1,4 @@
 #include <Wire.h>
-#include <Console.h>
 #include "Arduino.h"
 #include <Adafruit_MotorShield.h>      
 
@@ -16,40 +15,38 @@ boolean buttonLeft = false;
 boolean buttonRight = false;
 
 void setup() {
+  Serial.begin(9600);
+  Serial.println("Press 'r' - input");
+  Serial.println("Console: ");
   pinMode(PIN_ONE, INPUT_PULLUP);
   pinMode(PIN_THREE, INPUT_PULLUP);
-  Serial.begin(9600);
   AFMS.begin();                
   myMotor->setSpeed(50);  // 10 rpm
   stateHoming = 0;
-  Bridge.begin();
-  Console.begin();
-  while (!Console);
-  Console.println("Hi, what's your name?");
+
 }
 
 void loop() {  
-  initConsol();
+  initConsole();
   control(true);
   startHoming(false);
 }
 
-void initConsol(){
-  
-  if (Console.available() > 0) {
-    char c = Console.read();
-  
-  if (c == 'H') {
-
-      Console.print("Hi ");
-      Console.print(name);
-      Console.println("! Nice to meet you!");
-      Console.println();
-      Console.println("Hi, what's your name?");
-      name = "Linear";
-
-      }
-     
+void initConsole(){
+  if (Serial.available() > 0){
+    char input = char(Serial.read());
+    
+    if (input =='r'){
+      //r_waspressed = true;
+      Serial.println("SIGNAL");
+      digitalWrite(8, HIGH);
+      
+    }
+    else if (input == 'x'){
+    Serial.println("NO SIGNAL");
+    digitalWrite(8, LOW);
+    }
+    
   }
 }
 
